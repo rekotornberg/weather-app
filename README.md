@@ -5,7 +5,7 @@ Tämä sovellus hakee säätiedot OpenWeatherMap palvelusta ja näyttää ne And
 ## Mitä Retrofit tekee?
 
 Retrofit hoitaa yhteyden API:in.  
-Se lähettää HTTP-pyynnön OpenWeather-palveluun ja tuo vastauksen takaisin sovellukseen Kotlin-oliona.
+Se lähettää HTTP pyynnön OpenWeather palveluun ja tuo vastauksen takaisin sovellukseen Kotlin oliona.
 
 ## Miten JSON muutetaan dataluokiksi?
 
@@ -26,6 +26,6 @@ Kun tila muuttuu, näkymä päivittyy automaattisesti.
 
 ## Miten API-key on tallennettu?
 
-API-avain on tallennettu local.properties-tiedostoon.  
+API avain on tallennettu local.properties-tiedostoon.  
 Gradle siirtää sen BuildConfigiin, josta se otetaan käyttöön API kutsussa.  
 Näin avain ei ole kovakoodattuna sovellukseen.
