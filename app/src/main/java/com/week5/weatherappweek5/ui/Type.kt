@@ -1,4 +1,4 @@
-package com.week5.weatherappweek5.ui.theme
+package com.week5.weatherappweek5.ui
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
