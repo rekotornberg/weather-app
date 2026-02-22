@@ -15,15 +15,24 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.week5.weatherappweek5.viewmodel.WeatherViewModel
 
 @Composable
 fun WeatherScreen(
-    modifier: Modifier = Modifier,
-    viewModel: WeatherViewModel = viewModel()
+    modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
+
+    val viewModel: WeatherViewModel = viewModel(
+        factory = ViewModelProvider.AndroidViewModelFactory.getInstance(
+            context.applicationContext as android.app.Application
+        )
+    )
+
     val uiState by viewModel.uiState.collectAsState()
 
     Column(
@@ -32,7 +41,6 @@ fun WeatherScreen(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-
         Text(
             text = "Sääsovellus",
             style = MaterialTheme.typography.headlineSmall
@@ -64,23 +72,25 @@ fun WeatherScreen(
             )
         }
 
-        uiState.weather?.let { weather ->
-            val temperature = weather.main.temp
-            val description = weather.weather.firstOrNull()?.description ?: "Ei kuvausta"
-
+        uiState.cachedWeather?.let { cached ->
             Card(modifier = Modifier.fillMaxWidth()) {
                 Column(
                     modifier = Modifier.padding(16.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Text(
-                        text = weather.name,
+                        text = cached.city,
                         style = MaterialTheme.typography.titleLarge
                     )
-                    Text(text = "Lämpötila: $temperature °C")
-                    Text(text = "Kuvaus: $description")
+                    Text(text = "Lämpötila: ${cached.temperature} °C")
+                    Text(text = "Kuvaus: ${cached.description}")
+
+                    val minutesAgo = (System.currentTimeMillis() - cached.timestamp) / 60000
+                    Text(text = "Päivitetty: ${minutesAgo} min sitten")
                 }
             }
+        } ?: run {
+            Text(text = "Ei tallennettua säätietoa vielä.")
         }
     }
 }

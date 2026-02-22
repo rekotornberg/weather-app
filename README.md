@@ -1,3 +1,50 @@
+# WeatherAppWeek6 Room tietokannan käyttö
+
+Tähän viikko 6 harjoitukseen on lisätty sääsovellukseen Room tietokanta, mihin tallennetaan säätietoja välimuistiin.
+
+---
+
+## Mitä Room tekee (Entity – DAO – Database – Repository – ViewModel – UI)
+
+**Entity**
+WeatherCacheEntity määrittää tietokantataulun rakenteen.
+
+**DAO**
+WeatherDao määrittää kyselyt tietokantaan. Sen kautta haetaan tietyn kaupungin säätieto, tallennetaan välimuistiin, luetaan data UI:lle.
+
+**Database**
+AppDatabase luo Room tietokannan, ja antaa sen DAO:n käyttöön.
+
+**Repository**
+WeatherRepository yhdistää Retrofit API kutsut, Room tallennuksen ja hoitaa välimuistilogiikan, joka on nyt 30 min.
+
+**ViewModel**
+WeatherViewModel kuuntelee Room Flow dataa, kutsuu repositoryä, kun kaupunkia haetaan ja hoitaa UI-tilaa.
+
+---
+
+## Miten datavirta kulkee
+1. Käyttäjä syöttää kaupungin ja painaa “Hae sää”.
+2. ViewModel kutsuu Repositoryä.
+3. Repository tarkistaa Roomista löytyykö kyseisen kaupungin data.
+4. Jos tarvitaan, tehdään API kutsu Retrofitilla.
+5. Data tallennetaan Roomiin.
+6. Roomin Flow päivittyy.
+7. ViewModel saa uuden datan.
+8. Compose UI päivittyy.
+
+---
+
+## Miten välimuistilogiikka toimii?
+
+Kun käyttäjä hakee säätä:
+
+1. Repository tarkistaa onko haettua kaupungin säätietoa tallennettu Roomiin.
+2. Jos data on alle 30 minuuttia vanha, API kutsua ei tehdä.
+3. Jos data puuttuu tai on yli 30 minuuttia vanha, tehdään uusi API kutsu.
+4. Uusi data tallennetaan Roomiin.
+5. UI päivittyy Flown kautta.
+
 # WeatherAppWeek5
 
 Tämä sovellus hakee säätiedot OpenWeatherMap palvelusta ja näyttää ne Android sovelluksessa Jetpack Composen avulla.
